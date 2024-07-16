@@ -11,7 +11,7 @@ app.use(json());
 app.use(urlencoded({ extended: true }));
 
 // Routes
-app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
 
 // Start server
 const startServer = async () => {
