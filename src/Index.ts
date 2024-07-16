@@ -1,17 +1,19 @@
 import express from 'express';
 import { json, urlencoded } from 'body-parser';
 import { connectDatabase } from './dataBase';
-import authRoutes from './routes/controller/auth.controller';
+import login from './routes/controller/login.controller';
+import signup from "./routes/controller/signup.controller"
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 
 // Middleware
 app.use(json());
 app.use(urlencoded({ extended: true }));
 
 // Routes
-app.use('/auth', authRoutes);
+app.use('/auth', login);
+app.use('/auth',signup );
 
 // Start server
 const startServer = async () => {

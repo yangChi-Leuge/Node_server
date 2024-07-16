@@ -1,11 +1,11 @@
 import { RowDataPacket } from 'mysql2';
 import { getConnection } from '../../dataBase';
-import { generateAccessToken, generateRefreshToken } from '../token/token.service';
+import { generateAccessToken, generateRefreshToken } from '../token/token.generator';
 
-export const authenticateUser = async (id: string, password: string): Promise<{ id: string, username: string, accessToken: string, refreshToken: string } | null> => {
+export const authenticateUser = async (id: string, password: string): Promise<{ id: string, name: string, accessToken: string, refreshToken: string } | null> => {
   const connection = getConnection();
   const [rows] = await connection.execute<RowDataPacket[]>(
-    'SELECT id, username FROM users WHERE id = ? AND password = ?',
+    'SELECT id, name FROM tbl_member WHERE id = ? AND password = ?',
     [id, password]
   );
 
@@ -19,7 +19,7 @@ export const authenticateUser = async (id: string, password: string): Promise<{ 
 
   return {
     id: user.id,
-    username: user.username,
+    name: user.username,
     accessToken,
     refreshToken
   };
