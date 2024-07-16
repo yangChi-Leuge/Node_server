@@ -11,7 +11,7 @@ export const connectDatabase = async (): Promise<void> => {
       password: env.DB_PASSWORD,
       database: env.DB_DATABASE,
     });
-    console.log("Connected to MySQL database");
+    console.log("database 연결완");
   } catch (error) {
     console.error("Error connecting to MySQL database:", error);
     process.exit(1); // Exit with error

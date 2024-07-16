@@ -1,21 +1,23 @@
-import express from 'express';
-import { json, urlencoded } from 'body-parser';
-import { connectDatabase } from './dataBase';
-import login from './routes/controller/login.controller';
-import signup from "./routes/controller/signup.controller"
+import express from "express";
+import { json, urlencoded } from "body-parser";
+import { connectDatabase } from "./dataBase";
+import login from "./routes/controller/login.controller";
+import signup from "./routes/controller/signup.controller";
+import swaggerUi from "swagger-ui-express";
+import swaggerOptions from "./swagger/swagger";
 
 const app = express();
 const PORT = process.env.PORT || 8000;
 
-// Middleware
 app.use(json());
 app.use(urlencoded({ extended: true }));
 
-// Routes
-app.use('/auth', login);
-app.use('/auth',signup );
+app.use("/auth", login);
+app.use("/auth", signup);
 
-// Start server
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerOptions));
+
 const startServer = async () => {
   try {
     await connectDatabase();
@@ -23,7 +25,7 @@ const startServer = async () => {
       console.log(`Server is running on http://localhost:${PORT}`);
     });
   } catch (error) {
-    console.error('Error starting server:', error);
+    console.error("Error starting server:", error);
   }
 };
 
