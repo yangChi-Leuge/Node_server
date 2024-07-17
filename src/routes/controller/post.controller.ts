@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { getConnection } from "../../dataBase";
-import { getUserIdFromAccessToken } from "../token/jwt";
+import { getUserIdFromAccessToken, getUserNameFromAccessToken } from "../token/jwt";
 
 const router = express.Router();
 
@@ -41,6 +41,12 @@ router.post("/", async (req: Request, res: Response) => {
 });
 
 router.get("/all", async (req: Request, res: Response) => {
+  const accessToken = req.headers.authorization?.split(" ")[1];
+
+  if (!accessToken) {
+    return res.status(400).json({ message: "토큰이 필요합니다." });
+  }
+  
   try {
     const db = getConnection();
 

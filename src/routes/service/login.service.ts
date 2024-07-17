@@ -13,13 +13,13 @@ export const authenticateUser = async (id: string, password: string): Promise<{ 
     return null;
   }
 
-  const user = rows[0] as { id: string, username: string };
-  const accessToken = generateAccessToken({ id: user.id, username: user.username });
-  const refreshToken = generateRefreshToken({ id: user.id, username: user.username });
+  const user = rows[0] as { id: string, name: string }; 
+  const accessToken = generateAccessToken({ id: user.id,  name: user.name }); 
+  const refreshToken = generateRefreshToken({ id: user.id,  name: user.name }); 
 
   return {
     id: user.id,
-    name: user.username,
+    name: user.name,
     accessToken,
     refreshToken
   };

@@ -45,12 +45,15 @@ router.get("/profile", async (req: Request, res: Response) => {
             'WHERE L.fk_member_id = ?',
             [userId]
         );
-
-        return res.json({
-            id: user.id,
-            name: user.name,
-            postsCreatedByUser,
-            likedPosts
+const data = {
+    id: user.id,
+    name: user.name,
+    postsCreatedByUser,
+    likedPosts
+}
+        return res.status(200).json({message:"성공",
+            data
+           
         });
     } catch (error) {
         console.error("profile Error:", error);

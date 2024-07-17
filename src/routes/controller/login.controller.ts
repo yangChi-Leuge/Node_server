@@ -7,7 +7,7 @@ router.post("/login", async (req: Request, res: Response) => {
   const { id, password } = req.headers;
 
   if (!id || !password) {
-    return res.status(400).json({ message: "아이디 비밀번호가 맞지않음" });
+    return res.status(400).json({ message: "아이디 비밀번호가 맞지 않음" });
   }
 
   try {
@@ -18,6 +18,8 @@ router.post("/login", async (req: Request, res: Response) => {
     }
 
     const data = {
+      id: user.id,
+      name: user.name,  
       accessToken: user.accessToken,
       refreshToken: user.refreshToken,
     };

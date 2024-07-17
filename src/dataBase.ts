@@ -3,8 +3,7 @@ import { env } from "./env";
 
 let connection: Connection | null = null;
 
-// 데이터베이스 연결을 설정하는 함수
-export const connectDatabase = async (): Promise<Connection> => {
+export const connectDatabase = async (): Promise<void> => {
   try {
     const conn = await createConnection({
       host: env.DB_HOST,
@@ -14,7 +13,6 @@ export const connectDatabase = async (): Promise<Connection> => {
     });
     console.log("Database connected");
     connection = conn;
-    return conn;
   } catch (error) {
     console.error("Error connecting to MySQL database:", error);
     throw error;
