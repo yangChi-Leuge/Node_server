@@ -11,5 +11,6 @@ export const env = {
   REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET || "",
   CLIENT_ID: process.env.CLIENT_ID || "",
   CLIENT_SECRET:process.env.CLIENT_SECRET || "",
-  SECRET_KEY: process.env.SECRET_KEY || "",
+  NEWS_SECRET_KEY: process.env.SECRET_KEY || "",
+  JWT_SECRET: process.env.JWT_SECRET || "",
 };
