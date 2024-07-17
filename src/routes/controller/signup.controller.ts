@@ -3,34 +3,6 @@ import { createUser } from "../service/signup.service";
 
 const router = express.Router();
 
-/**
- * @swagger
- * /auth/signup:
- *   post:
- *     summary: Create a new user
- *     description: Register a new user with ID, name, and password
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               id:
- *                 type: string
- *               name:
- *                 type: string
- *               password:
- *                 type: string
- *     responses:
- *       '200':
- *         description: 회원가입 성공
- *       '401':
- *         description: 잘못된 자격 증명
- *       '500':
- *         description: 내부 서버 오류
- */
-
 router.post("/signup", async (req: Request, res: Response) => {
   const { id, name, password } = req.headers as { [key: string]: string };
   try {

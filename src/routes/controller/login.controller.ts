@@ -1,29 +1,3 @@
-/**
- * @swagger
- * /auth/login:
- *   post:
- *     summary: Member Verification
- *     description: ID, and Password
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               id:
- *                 type: string
- *               password:
- *                 type: string
- *     responses:
- *       '200':
- *         description: 로그인 성공
- *       '401':
- *         description: 잘못된 자격 증명
- *       '500':
- *         description: 내부 서버 오류
- */
-
 import express, { Request, Response } from "express";
 import { authenticateUser } from "../service/login.service";
 
@@ -33,7 +7,7 @@ router.post("/login", async (req: Request, res: Response) => {
   const { id, password } = req.headers;
 
   if (!id || !password) {
-    return res.status(400).json({ message: "ID and password are required" });
+    return res.status(400).json({ message: "아이디 비밀번호가 맞지않음" });
   }
 
   try {
