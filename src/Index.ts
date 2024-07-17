@@ -12,6 +12,8 @@ import signup from "./routes/controller/signup.controller";
 import profile from "./routes/controller/user.controller";
 import news from "./routes/controller/new.controller";
 import post from "./routes/controller/post.controller";
+import global_day from "./routes/controller/global_day.controller";
+import challenge from "./routes/controller/challenge.controller";
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -26,6 +28,8 @@ app.use("/auth", signup);
 app.use(profile);
 app.use(news);
 app.use(post);
+app.use("/globalday",global_day);
+app.use("/challenge", challenge);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerYaml));
 

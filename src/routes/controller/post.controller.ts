@@ -10,40 +10,36 @@ router.post("/post", async (req: Request, res: Response) => {
   const accessToken = req.headers.authorization?.split(" ")[1];
 
   if (!accessToken) {
-    return res.status(401).json({ message: "토큰이 필요합니다." });
+    return res.status(400).json({ message: "토큰이 필요합니다." });
   }
 
   try {
-    // JWT 토큰 검증 후 사용자 ID 추출
     const decoded = jwt.verify(
       accessToken,
       env.ACCESS_TOKEN_SECRET
     ) as jwt.JwtPayload;
-    const userId = decoded.userId;
+    const userId = decoded.id;
 
     const db = getConnection();
 
-    const createPostQuery = `
-      INSERT INTO tbl_post (title, content, fk_member_id, hashtag)
-      VALUES (?, ?, ?, ?)
-    `;
-    const createPostValues = [title, content, userId, hashtag || null];
+    const createPostQuery = `INSERT INTO tbl_post (title, content, fk_member_id)
+      VALUES (?, ?, ?)`;
+    const createPostValues = [title || null, content || null, userId];
 
     await db.execute(createPostQuery, createPostValues);
 
-    // 챌린지 제목 설정
-    const challengeTitle = hashtag ? hashtag : title;
+    if (!hashtag) {
+      return res.status(200).json({ message: "게시물만 생성 완료" });
+    }
+    const challengeTitle = hashtag === null ? hashtag : title;
 
-    const createChallengeQuery = `
-      INSERT INTO tbl_challenge (title, content, challenge_success, date, hashtag, fk_member_id)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `;
+    const createChallengeQuery = `INSERT INTO tbl_challenge (title, content, challenge_success, date, fk_member_id)
+      VALUES (?, ?, ?, ?, ?)`;
     const createChallengeValues = [
-      challengeTitle,
-      content,
+      challengeTitle ?? null,
+      content ?? null,
       false,
-      date,
-      hashtag,
+      date ?? null,
       userId,
     ];
 
@@ -55,6 +51,21 @@ router.post("/post", async (req: Request, res: Response) => {
     return res
       .status(500)
       .json({ message: "게시물 및 챌린지 생성 중 오류 발생" });
+  }
+});
+
+
+router.get("/post", async (req: Request, res: Response) => {
+  const db = getConnection();
+
+  try {
+    const query = `SELECT * FROM tbl_post`;
+    const [role] = await db.execute(query);
+
+    return res.status(200).json({message:"게시물 불러오기 성공" , role});
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    return res.status(500).json({ message: "게시물 조회 중 오류 발생" });
   }
 });
 
