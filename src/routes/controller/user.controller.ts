@@ -7,14 +7,15 @@ const router = express.Router();
 
 router.get("/profile", async (req: Request, res: Response) => {
     const accessToken = req.headers.authorization?.split(" ")[1]; 
-
     if (!accessToken) {
-        return res.status(401).json({ message: "액세스 토큰이 필요합니다." });
+        
+        return res.status(400).json({ message: "액세스 토큰이 필요합니다." });
     }
     try {
-        const userId = getUserIdFromAccessToken(accessToken);
+        const id = getUserIdFromAccessToken(accessToken);
 
-        if (!userId) {
+
+        if (!id) {
             return res.status(401).json({ message: "유효하지 않은 토큰입니다." });
         }
 
@@ -22,7 +23,7 @@ router.get("/profile", async (req: Request, res: Response) => {
 
         const [userRows] = await connection.query<RowDataPacket[]>(
             'SELECT id, name FROM tbl_member WHERE id = ?',
-            [userId]
+            [id]
         );
 
         if (userRows.length === 0) {
@@ -34,7 +35,7 @@ router.get("/profile", async (req: Request, res: Response) => {
     
         const [postsCreatedByUser] = await connection.query<RowDataPacket[]>(
             'SELECT post_Id, title, content FROM tbl_post WHERE fk_member_id = ?',
-            [userId]
+            [id]
         );
 
     
@@ -43,7 +44,7 @@ router.get("/profile", async (req: Request, res: Response) => {
             'FROM tbl_post P ' +
             'JOIN tbl_like L ON P.post_Id = L.fk_post_Id ' +
             'WHERE L.fk_member_id = ?',
-            [userId]
+            [id]
         );
 const data = {
     id: user.id,
