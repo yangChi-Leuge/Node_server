@@ -1,30 +1,34 @@
 import express, { Request, Response } from "express";
-import jwt from "jsonwebtoken";
 import { getConnection } from "../../dataBase";
-import { env } from "../../env";
+import { getUserIdFromAccessToken } from "../token/jwt";
 
 const router = express.Router();
-const db = getConnection();
 
 router.get("/", async (req: Request, res: Response) => {
-  const { day } = req.query as { day: string };
-  const accessToken = req.headers.authorization?.split(" ")[1];
+  const { date } = req.query as { date: string };
+  const db = getConnection();
 
-  if (!accessToken) {
-    return res.status(400).json({ message: "토큰이 필요합니다" });
-  } else if (!day) {
-    return res.status(400).json({ message: "day에 값이 없습니다" });
-  }
   try {
-    const query = `SELECT * FROM tbl_global_day`;
-    const [role] = await db.execute(query);
 
-    return res.status(200).json({ message: "챌린지 불러오기 성공", role });
+
+    const month = date.substring(0, 2);
+    let query = `
+    SELECT p.*, p.hashtage AS hashtag
+    FROM tbl_post p
+    WHERE p.hashtage IS NOT NULL
+  `;
+
+  if (month) {
+    query += ` AND p.date LIKE '${month}%'`; 
+  }
+
+    const [data] = await db.execute(query);
+
+    return res.status(200).json({ message: "챌린지 게시물 조회 성공", data });
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "챌린지 불러오는중 오류" });
+    console.error("챌린지 게시물을 불러오는 중 에러 발생:", error);
+    return res.status(500).json({ message: "챌린지 게시물 조회 중 오류 발생" });
   }
 });
-
 
 export default router;

@@ -1,21 +1,29 @@
 import { createConnection, Connection } from "mysql2/promise";
 import { env } from "./env";
 
-let connection: Connection;
+let connection: Connection | null = null;
 
-export const connectDatabase = async (): Promise<void> => {
+// 데이터베이스 연결을 설정하는 함수
+export const connectDatabase = async (): Promise<Connection> => {
   try {
-    connection = await createConnection({
+    const conn = await createConnection({
       host: env.DB_HOST,
       user: env.DB_USER,
       password: env.DB_PASSWORD,
       database: env.DB_DATABASE,
     });
-    console.log("database 연결완");
+    console.log("Database connected");
+    connection = conn;
+    return conn;
   } catch (error) {
     console.error("Error connecting to MySQL database:", error);
-    process.exit(1); // Exit with error
+    throw error;
   }
 };
 
-export const getConnection = (): Connection => connection;
+export const getConnection = (): Connection => {
+  if (!connection) {
+    throw new Error('Database connection not established');
+  }
+  return connection;
+};
